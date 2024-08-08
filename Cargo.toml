@@ -1,0 +1,31 @@
+[package]
+name = "repro"
+version = "0.1.0"
+edition = "2021"
+build = "build.rs"
+
+[build-dependencies]
+revmc = { git = "https://github.com/0xDmtri/revmc.git", features = ["llvm-prefer-dynamic"] }
+revmc-build = { git = "https://github.com/0xDmtri/revmc.git" }
+cc = "1.1"
+alloy = "0.2.0"
+
+[dependencies]
+revmc-builtins = { git = "https://github.com/0xDmtri/revmc.git", default-features = false }
+revmc-context = { git = "https://github.com/0xDmtri/revmc.git", default-features = false }
+revm = { version = "12.1", features = ["serde"] }
+alloy = { version = "0.2.0", features = [
+    "contract",
+    "network",
+    "providers",
+    "provider-ipc",
+    "json-rpc",
+    "signer-local",
+    "rpc-client",
+    "rpc-client-ipc",
+    "rpc-types-eth",
+    "rpc-types-trace",
+] }
+foundry-fork-db = { git = "https://github.com/foundry-rs/foundry-fork-db.git" }
+eyre = "0.6.12"
+lazy_static = "1.5"
