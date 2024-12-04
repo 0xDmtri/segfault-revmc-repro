@@ -6,10 +6,7 @@ use revmc_builtins as _;
 
 use std::sync::Arc;
 
-use alloy::{
-    primitives::{B256, U256},
-    rpc::types::Block,
-};
+use alloy::primitives::{B256, U256};
 use revm::{handler::register::EvmHandler, Database};
 use revmc_context::EvmCompilerFn;
 
@@ -52,15 +49,16 @@ fn register_handler<DB: Database + 'static>(handler: &mut EvmHandler<'_, Externa
 #[inline]
 pub fn build_evm_with_libdexy<'a, DB: Database + 'static>(
     db: DB,
-    block: &Block,
+    block_number: u64,
+    block_timestamp: u64,
+    block_base_fee: u64,
 ) -> revm::Evm<'a, ExternalContext, DB> {
     revm::Evm::builder()
         .with_db(db)
         .modify_block_env(|revm_block| {
-            revm_block.number = U256::from(block.header.number.expect("Block number"));
-            revm_block.timestamp = U256::from(block.header.timestamp);
-            revm_block.basefee =
-                U256::from(block.header.base_fee_per_gas.expect("Base fee on mainnet"));
+            revm_block.number = U256::from(block_number);
+            revm_block.timestamp = U256::from(block_timestamp);
+            revm_block.basefee = U256::from(block_base_fee);
             revm_block.coinbase = COINBASE;
         })
         .with_external_context(ExternalContext::new())

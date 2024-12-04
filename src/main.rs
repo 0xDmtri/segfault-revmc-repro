@@ -1,7 +1,7 @@
 use std::{collections::BTreeSet, sync::Arc};
 
 use alloy::{
-    network::AnyNetwork,
+    network::{AnyNetwork, BlockResponse},
     primitives::{keccak256, utils::parse_ether, B256, U256},
     providers::{ProviderBuilder, RootProvider},
     rpc::client::ClientBuilder,
@@ -48,7 +48,12 @@ fn main() -> Result<()> {
 
     let db = CacheDB::new(backend);
 
-    let mut evm = build_evm_with_libdexy(db, &block);
+    let mut evm = build_evm_with_libdexy(
+        db,
+        block.header().number,
+        block.header().timestamp,
+        block.header().base_fee_per_gas.expect("Valid base fee"),
+    );
 
     {
         spoof_storage(evm.db_mut(), parse_ether("69")?)?;
@@ -60,7 +65,12 @@ fn main() -> Result<()> {
     tx.transact_to = TransactTo::Call(LIB_DEXY_ADDRESS);
     tx.data = CALLDATA.clone();
     tx.gas_limit = 700000;
-    tx.gas_price = U256::from(block.header.base_fee_per_gas.expect("Base fee on mainnet"));
+    tx.gas_price = U256::from(
+        block
+            .header()
+            .base_fee_per_gas
+            .expect("Base fee on mainnet"),
+    );
     tx.value = U256::ZERO;
 
     let result = match evm.transact_commit() {

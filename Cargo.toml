@@ -5,16 +5,16 @@ edition = "2021"
 build = "build.rs"
 
 [build-dependencies]
-revmc = { git = "https://github.com/0xDmtri/revmc.git", features = ["llvm-prefer-dynamic"] }
-revmc-build = { git = "https://github.com/0xDmtri/revmc.git" }
-cc = "1.1"
-alloy = "0.2.0"
+revmc = { git = "https://github.com/paradigmxyz/revmc.git", features = ["llvm-prefer-dynamic"], branch = "dani/unaligned-mem-ops" }
+revmc-build = { git = "https://github.com/paradigmxyz/revmc.git", branch = "dani/unaligned-mem-ops" }
+cc = "1.2"
+alloy = "0.7"
 
 [dependencies]
-revmc-builtins = { git = "https://github.com/0xDmtri/revmc.git", default-features = false }
-revmc-context = { git = "https://github.com/0xDmtri/revmc.git", default-features = false }
-revm = { version = "12.1", features = ["serde"] }
-alloy = { version = "0.2.0", features = [
+revmc-builtins = { git = "https://github.com/paradigmxyz/revmc.git", branch = "dani/unaligned-mem-ops", default-features = false }
+revmc-context = { git = "https://github.com/paradigmxyz/revmc.git", branch = "dani/unaligned-mem-ops",  default-features = false }
+revm = { version = "18.0", features = ["serde"] }
+alloy = { version = "0.7", features = [
     "contract",
     "network",
     "providers",
@@ -23,6 +23,7 @@ alloy = { version = "0.2.0", features = [
     "signer-local",
     "rpc-client",
     "rpc-client-ipc",
+    "rpc-types",
     "rpc-types-eth",
     "rpc-types-trace",
 ] }
